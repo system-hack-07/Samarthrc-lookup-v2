@@ -1,13 +1,9 @@
 /* =========================================
    SAMARTH HACKER SYSTEM
-   RC LOOKUP FRONTEND CONNECTED TO REAL API
+   RC LOOKUP FRONTEND (REAL API CONNECTED)
    ========================================= */
 
 console.log("samarth hacker system loaded");
-
-/* =========================================
-   FETCH RC FUNCTION (REAL API CONNECTED)
-   ========================================= */
 
 async function fetchRC(){
   const rc = document.getElementById("rcInput").value.trim().toUpperCase();
@@ -24,7 +20,7 @@ async function fetchRC(){
   result.innerHTML = "";
 
   try{
-    // ✅ REAL API (YOUR BACKEND)
+    // 🔗 REAL API
     const API_URL = `https://vehicle-eight-vert.vercel.app/api?rc=${encodeURIComponent(rc)}`;
 
     const response = await fetch(API_URL);
@@ -47,19 +43,21 @@ async function fetchRC(){
     result.innerHTML = `
       <div>>> VEHICLE DATA EXTRACTED</div>
       <div>--------------------------</div>
-      <div><b>RC Number:</b> ${data.rc || rc}</div>
-      <div><b>Owner:</b> ${d["Owner Name"] || "N/A"}</div>
-      <div><b>Model:</b> ${d["Maker Model"] || "N/A"}</div>
-      <div><b>Fuel Type:</b> ${d["Fuel Type"] || "N/A"}</div>
-      <div><b>RTO:</b> ${d["Registered RTO"] || "N/A"}</div>
-      <div><b>Registration Date:</b> ${d["Registration Date"] || "N/A"}</div>
-      <div><b>Tax Upto:</b> ${d["Tax Upto"] || "N/A"}</div>
-      <div><b>Fitness Upto:</b> ${d["Fitness Upto"] || "N/A"}</div>
-      <div><b>PUC Upto:</b> ${d["PUC Upto"] || "N/A"}</div>
-      <div><b>Insurance Company:</b> ${d["Insurance Company"] || "N/A"}</div>
-      <div><b>Insurance Upto:</b> ${d["Insurance Upto"] || "N/A"}</div>
-      <div><b>Contact:</b> ${d["Phone"] || "N/A"}</div>
-      <div><b>Address:</b> ${d["Address"] || "N/A"}</div>
+      <div><b>RC Number:</b> ${data.rc}</div>
+      <div><b>Owner:</b> ${d["Owner Name"]}</div>
+      <div><b>Model:</b> ${d["Maker Model"]}</div>
+      <div><b>Fuel Type:</b> ${d["Fuel Type"]}</div>
+      <div><b>Vehicle Class:</b> ${d["Vehicle Class"]}</div>
+      <div><b>RTO:</b> ${d["Registered RTO"]}</div>
+      <div><b>City:</b> ${d["City Name"]}</div>
+      <div><b>Registration Date:</b> ${d["Registration Date"]}</div>
+      <div><b>Tax Upto:</b> ${d["Tax Upto"]}</div>
+      <div><b>Fitness Upto:</b> ${d["Fitness Upto"]}</div>
+      <div><b>PUC Upto:</b> ${d["PUC Upto"]}</div>
+      <div><b>Insurance Company:</b> ${d["Insurance Company"]}</div>
+      <div><b>Insurance Expiry:</b> ${d["Insurance Expiry"]}</div>
+      <div><b>Contact:</b> ${d["Phone"]}</div>
+      <div><b>Address:</b> ${d["Address"]}</div>
       <div>--------------------------</div>
       <div>ACCESS LEVEL : ROOT_GRANTED</div>
     `;
@@ -73,6 +71,5 @@ async function fetchRC(){
 }
 
 /* =========================================
-   END OF FILE
+   END FILE
    ========================================= */
-
