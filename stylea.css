@@ -1,0 +1,141 @@
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family: "Courier New", monospace;
+}
+
+body{
+  height:100vh;
+  background:#000;
+  overflow:hidden;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  color:#00ff9c;
+}
+
+/* MATRIX BACKGROUND */
+.matrix-bg{
+  position:absolute;
+  inset:0;
+  background: radial-gradient(circle at top, #002b1e, #000);
+  opacity:0.7;
+  z-index:-1;
+}
+
+/* TERMINAL BOX */
+.terminal{
+  width:100%;
+  max-width:430px;
+  background:rgba(0,10,5,0.85);
+  border:1px solid #00ff9c;
+  box-shadow:0 0 25px #00ff9c55;
+  border-radius:12px;
+  padding:25px;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow{
+  from{ box-shadow:0 0 15px #00ff9c55; }
+  to{ box-shadow:0 0 35px #00ff9caa; }
+}
+
+header{
+  text-align:center;
+  margin-bottom:20px;
+}
+
+header h1{
+  font-size:22px;
+  letter-spacing:2px;
+}
+
+header h1 span{
+  color:#00ffff;
+}
+
+.brand{
+  font-size:12px;
+  letter-spacing:3px;
+  color:#00ffff;
+  margin-top:5px;
+  text-transform:uppercase;
+}
+
+.panel{
+  margin-top:15px;
+}
+
+.cmd{
+  font-size:13px;
+  margin-bottom:10px;
+  color:#00ff9c;
+}
+
+.input-box{
+  display:flex;
+  gap:10px;
+}
+
+.input-box input{
+  flex:1;
+  background:#000;
+  border:1px solid #00ff9c;
+  color:#00ff9c;
+  padding:12px;
+  border-radius:6px;
+  outline:none;
+}
+
+.input-box input::placeholder{
+  color:#00ff9c88;
+}
+
+.input-box button{
+  background:#00ff9c;
+  border:none;
+  color:#000;
+  padding:12px 18px;
+  border-radius:6px;
+  font-weight:bold;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+.input-box button:hover{
+  background:#00ffff;
+  box-shadow:0 0 15px #00ffff;
+}
+
+.loading{
+  display:none;
+  margin-top:15px;
+  font-size:13px;
+  color:#00ffff;
+  animation: blink 1s infinite;
+}
+
+@keyframes blink{
+  0%{opacity:1;}
+  50%{opacity:0.3;}
+  100%{opacity:1;}
+}
+
+.result{
+  display:none;
+  margin-top:15px;
+  background:#001a12;
+  border:1px solid #00ff9c;
+  padding:12px;
+  border-radius:6px;
+  font-size:13px;
+  line-height:1.6;
+}
+
+footer{
+  margin-top:15px;
+  font-size:11px;
+  text-align:center;
+  color:#00ff9c88;
+}
