@@ -1,17 +1,16 @@
-/* ================================
+/* =========================================
    SAMARTH HACKER SYSTEM
-   RC LOOKUP + TELEGRAM BOT READY
-   ================================ */
+   RC LOOKUP FRONTEND CONNECTED TO REAL API
+   ========================================= */
 
-const BOT_TOKEN = "8684772454:AAF8vsrr9KcmPdA42di_B4geJL44aCL7sBQ";
-const TELEGRAM_API = "https://api.telegram.org/bot8684772454:AAF8vsrr9KcmPdA42di_B4geJL44aCL7sBQ/";
+console.log("samarth hacker system loaded");
 
-/* ================================
-   RC LOOKUP FUNCTION
-   ================================ */
+/* =========================================
+   FETCH RC FUNCTION (REAL API CONNECTED)
+   ========================================= */
 
 async function fetchRC(){
-  const rc = document.getElementById("rcInput").value.trim();
+  const rc = document.getElementById("rcInput").value.trim().toUpperCase();
   const loading = document.getElementById("loading");
   const result = document.getElementById("result");
 
@@ -25,71 +24,54 @@ async function fetchRC(){
   result.innerHTML = "";
 
   try{
-    // 🔗 Replace API URL with your real API later
-    const API_URL = `https://YOUR_API_URL_HERE?rc=${rc}`;
+    // ✅ REAL API (YOUR BACKEND)
+    const API_URL = `https://vehicle-eight-vert.vercel.app/api?rc=${encodeURIComponent(rc)}`;
 
     const response = await fetch(API_URL);
 
     if(!response.ok){
-      throw new Error("API ERROR");
+      throw new Error("API REQUEST FAILED");
     }
 
     const data = await response.json();
+
+    if(!data || !data.details){
+      throw new Error("NO VEHICLE DATA FOUND");
+    }
+
+    const d = data.details;
 
     loading.style.display = "none";
     result.style.display = "block";
 
     result.innerHTML = `
-      <div>>> SYSTEM DATA EXTRACTED</div>
+      <div>>> VEHICLE DATA EXTRACTED</div>
       <div>--------------------------</div>
-      <div>RC_NUMBER : ${data.rc || rc}</div>
-      <div>STATUS    : ${data.status || "N/A"}</div>
-      <div>OWNER     : ${data.owner || "N/A"}</div>
-      <div>VEHICLE   : ${data.vehicle || "N/A"}</div>
-      <div>CITY      : ${data.city || "N/A"}</div>
+      <div><b>RC Number:</b> ${data.rc || rc}</div>
+      <div><b>Owner:</b> ${d["Owner Name"] || "N/A"}</div>
+      <div><b>Model:</b> ${d["Maker Model"] || "N/A"}</div>
+      <div><b>Fuel Type:</b> ${d["Fuel Type"] || "N/A"}</div>
+      <div><b>RTO:</b> ${d["Registered RTO"] || "N/A"}</div>
+      <div><b>Registration Date:</b> ${d["Registration Date"] || "N/A"}</div>
+      <div><b>Tax Upto:</b> ${d["Tax Upto"] || "N/A"}</div>
+      <div><b>Fitness Upto:</b> ${d["Fitness Upto"] || "N/A"}</div>
+      <div><b>PUC Upto:</b> ${d["PUC Upto"] || "N/A"}</div>
+      <div><b>Insurance Company:</b> ${d["Insurance Company"] || "N/A"}</div>
+      <div><b>Insurance Upto:</b> ${d["Insurance Upto"] || "N/A"}</div>
+      <div><b>Contact:</b> ${d["Phone"] || "N/A"}</div>
+      <div><b>Address:</b> ${d["Address"] || "N/A"}</div>
       <div>--------------------------</div>
-      <div>ACCESS_LEVEL : ROOT_GRANTED</div>
+      <div>ACCESS LEVEL : ROOT_GRANTED</div>
     `;
 
   }catch(error){
     loading.style.display = "none";
     result.style.display = "block";
-    result.innerHTML = `<div style="color:#ff4d4d;">SYSTEM ERROR : API FAILED</div>`;
-    console.error(error);
+    result.innerHTML = `<div style="color:#ff4d4d;">SYSTEM ERROR : ${error.message}</div>`;
+    console.error("API ERROR:", error);
   }
 }
 
-/* ================================
-   TELEGRAM BOT MESSAGE FUNCTION
-   ================================ */
-
-async function sendToTelegram(chatId, message){
-  try{
-    const url = `${TELEGRAM_API}sendMessage`;
-
-    const payload = {
-      chat_id: chatId,
-      text: message
-    };
-
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type":"application/json"
-      },
-      body: JSON.stringify(payload)
-    });
-
-    const data = await response.json();
-    return data;
-
-  }catch(err){
-    console.error("TELEGRAM ERROR:", err);
-  }
-}
-
-/* ================================
-   SYSTEM READY
-   ================================ */
-
-console.log("samarth hacker system loaded");
+/* =========================================
+   END OF FILE
+   ========================================= */
