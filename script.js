@@ -1,75 +1,78 @@
 /* =========================================
    SAMARTH HACKER SYSTEM
-   RC LOOKUP FRONTEND (REAL API CONNECTED)
+   RC LOOKUP FRONTEND (UPDATED VERSION)
    ========================================= */
 
-console.log("samarth hacker system loaded");
+console.log("🚀 Samarth Hacker System Loaded");
 
-async function fetchRC(){
-  const rc = document.getElementById("rcInput").value.trim().toUpperCase();
-  const loading = document.getElementById("loading");
-  const result = document.getElementById("result");
+// Main function to fetch RC details
+async function fetchRC() {
+  const rcInput = document.getElementById("rcInput").value.trim().toUpperCase();
+  const loadingDiv = document.getElementById("loading");
+  const resultDiv = document.getElementById("result");
 
-  if(!rc){
-    alert("ENTER RC NUMBER");
+  // Check if user entered an RC number
+  if (!rcInput) {
+    alert("⚠️ Please enter an RC Number");
     return;
   }
 
-  loading.style.display = "block";
-  result.style.display = "none";
-  result.innerHTML = "";
+  // Show loading message
+  loadingDiv.style.display = "block";
+  resultDiv.style.display = "none";
+  resultDiv.innerHTML = "";
 
-  try{
-    // 🔗 REAL API
-    const API_URL = `https://vehicle-eight-vert.vercel.app/api?rc=${encodeURIComponent(rc)}`;
+  try {
+    // Real API endpoint
+    const API_URL = `https://vehicle-eight-vert.vercel.app/api?rc=${encodeURIComponent(rcInput)}`;
 
+    // Fetch data from API
     const response = await fetch(API_URL);
 
-    if(!response.ok){
-      throw new Error("API REQUEST FAILED");
-    }
+    if (!response.ok) throw new Error("API request failed");
 
     const data = await response.json();
 
-    if(!data || !data.details){
-      throw new Error("NO VEHICLE DATA FOUND");
-    }
+    if (!data || !data.details) throw new Error("No vehicle data found");
 
-    const d = data.details;
+    const vehicle = data.details;
 
-    loading.style.display = "none";
-    result.style.display = "block";
+    // Hide loading and show result
+    loadingDiv.style.display = "none";
+    resultDiv.style.display = "block";
 
-    result.innerHTML = `
-      <div>>> VEHICLE DATA EXTRACTED</div>
-      <div>--------------------------</div>
-      <div><b>RC Number:</b> ${data.rc}</div>
-      <div><b>Owner:</b> ${d["Owner Name"]}</div>
-      <div><b>Model:</b> ${d["Maker Model"]}</div>
-      <div><b>Fuel Type:</b> ${d["Fuel Type"]}</div>
-      <div><b>Vehicle Class:</b> ${d["Vehicle Class"]}</div>
-      <div><b>RTO:</b> ${d["Registered RTO"]}</div>
-      <div><b>City:</b> ${d["City Name"]}</div>
-      <div><b>Registration Date:</b> ${d["Registration Date"]}</div>
-      <div><b>Tax Upto:</b> ${d["Tax Upto"]}</div>
-      <div><b>Fitness Upto:</b> ${d["Fitness Upto"]}</div>
-      <div><b>PUC Upto:</b> ${d["PUC Upto"]}</div>
-      <div><b>Insurance Company:</b> ${d["Insurance Company"]}</div>
-      <div><b>Insurance Expiry:</b> ${d["Insurance Expiry"]}</div>
-      <div><b>Contact:</b> ${d["Phone"]}</div>
-      <div><b>Address:</b> ${d["Address"]}</div>
-      <div>--------------------------</div>
-      <div>ACCESS LEVEL : ROOT_GRANTED</div>
+    // Build HTML output
+    resultDiv.innerHTML = `
+      <h3>🚗 Vehicle Data Extracted</h3>
+      <hr>
+      <p><b>RC Number:</b> ${data.rc}</p>
+      <p><b>Owner:</b> ${vehicle["Owner Name"]}</p>
+      <p><b>Model:</b> ${vehicle["Maker Model"]}</p>
+      <p><b>Fuel Type:</b> ${vehicle["Fuel Type"]}</p>
+      <p><b>Vehicle Class:</b> ${vehicle["Vehicle Class"]}</p>
+      <p><b>RTO:</b> ${vehicle["Registered RTO"]}</p>
+      <p><b>City:</b> ${vehicle["City Name"]}</p>
+      <p><b>Registration Date:</b> ${vehicle["Registration Date"]}</p>
+      <p><b>Tax Upto:</b> ${vehicle["Tax Upto"]}</p>
+      <p><b>Fitness Upto:</b> ${vehicle["Fitness Upto"]}</p>
+      <p><b>PUC Upto:</b> ${vehicle["PUC Upto"]}</p>
+      <p><b>Insurance Company:</b> ${vehicle["Insurance Company"]}</p>
+      <p><b>Insurance Expiry:</b> ${vehicle["Insurance Expiry"]}</p>
+      <p><b>Contact:</b> ${vehicle["Phone"]}</p>
+      <p><b>Address:</b> ${vehicle["Address"]}</p>
+      <hr>
+      <p>✅ ACCESS LEVEL: ROOT_GRANTED</p>
     `;
 
-  }catch(error){
-    loading.style.display = "none";
-    result.style.display = "block";
-    result.innerHTML = `<div style="color:#ff4d4d;">SYSTEM ERROR : ${error.message}</div>`;
+  } catch (error) {
+    // Show error if API fails
+    loadingDiv.style.display = "none";
+    resultDiv.style.display = "block";
+    resultDiv.innerHTML = `<p style="color:#ff4d4d;">SYSTEM ERROR: ${error.message}</p>`;
     console.error("API ERROR:", error);
   }
 }
 
 /* =========================================
-   END FILE
+   END OF UPDATED FILE
    ========================================= */
