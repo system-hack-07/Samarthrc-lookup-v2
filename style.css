@@ -140,3 +140,32 @@ button::after{
   font-family: "Courier New", monospace;
   letter-spacing: 1px;
     }
+/* ===== FORCE DARK HACKER BACKGROUND ===== */
+
+html, body{
+  width: 100%;
+  height: 100%;
+  background: #000000 !important;
+  margin: 0;
+  padding: 0;
+}
+
+body{
+  background: radial-gradient(circle at top, #0f2027, #000000 75%) !important;
+  color: #e5f7ff;
+}
+
+/* Extra glow layer */
+body::before{
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(0,255,255,0.08), transparent 40%),
+    radial-gradient(circle at 80% 80%, rgba(0,255,255,0.05), transparent 40%);
+  pointer-events: none;
+  z-index: -1;
+                          }
