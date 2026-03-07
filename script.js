@@ -104,7 +104,7 @@ async function fetchRC() {
       if (d["Fuel Type"] === "Diesel") { riskLevel = "HIGH"; riskClass = "high"; }
       risk.innerHTML = `<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;
 
-      // ✅ Phone Number FIXED
+      // ✅ Phone Number & Full API Details
       result.innerText =
 `RC : ${data.rc}
 Owner : ${d["Owner Name"] || "N/A"}
@@ -115,10 +115,15 @@ Fuel : ${d["Fuel Type"] || "N/A"}
 Vehicle Class : ${d["Vehicle Class"] || "N/A"}
 RTO : ${d["Registered RTO"] || "N/A"}
 City : ${d["City Name"] || "N/A"}
-Registration : ${d["Registration Date"] || "N/A"}`;
+Registration : ${d["Registration Date"] || "N/A"}
+Tax Upto : ${d["Tax Upto"] || "N/A"}
+Fitness Upto : ${d["Fitness Upto"] || "N/A"}
+PUC Upto : ${d["PUC Upto"] || "N/A"}
+Insurance Company : ${d["Insurance Company"] || "N/A"}
+Insurance Upto : ${d["Insurance Upto"] || "N/A"}`;
     } catch {
       radar.style.display = "none";
       result.innerText = "Vehicle Data Error";
     }
   }, 2500);
-        }
+}
