@@ -72,7 +72,7 @@ async function fetchRC(){
   const risk=document.getElementById("riskIndicator");
   radar.style.display="block";
 
-  // PLAY SCAN SOUND directly triggered by click
+  // PLAY SCAN SOUND
   const scanSound=document.getElementById("scanSound");
   if(scanSound) scanSound.play().catch(e=>console.log("Scan sound blocked:",e));
 
@@ -82,13 +82,17 @@ async function fetchRC(){
       const data=await response.json();
       const d=data.details;
       radar.style.display="none";
-      let riskLevel="LOW";let riskClass="low";
-      if(d["Vehicle Class"]?.includes("Transport")){riskLevel="MEDIUM";riskClass="medium";}
-      if(d["Fuel Type"]==="Diesel"){riskLevel="HIGH";riskClass="high";}
+
+      let riskLevel="LOW"; let riskClass="low";
+      if(d["Vehicle Class"]?.includes("Transport")){riskLevel="MEDIUM"; riskClass="medium";}
+      if(d["Fuel Type"]==="Diesel"){riskLevel="HIGH"; riskClass="high";}
       risk.innerHTML=`<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;
+
+      // ✅ ADD ADDRESS FIELD
       result.innerText=
 `RC : ${data.rc}
 Owner : ${d["Owner Name"]}
+Address : ${d["Address"] || "N/A"}
 Model : ${d["Maker Model"]}
 Fuel : ${d["Fuel Type"]}
 Vehicle Class : ${d["Vehicle Class"]}
