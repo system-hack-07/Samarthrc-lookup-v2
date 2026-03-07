@@ -127,3 +127,4 @@ Insurance Upto : ${d["Insurance Upto"] || "N/A"}`;
     }
   }, 2500);
 }
+
