@@ -1,201 +1,63 @@
-@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:#020505;font-family:'Fira Code',monospace;overflow:hidden;color:#00ff9c;}
 
-:root {
---cyan:#00f2ff;
---magenta:#ff00ea;
---green:#00ff41;
---bg:#050505;
+/* SHINING TEXT */
+.glowText{
+  font-family:'Orbitron',sans-serif;
+  background:linear-gradient(90deg,#00ffff,#7c4dff,#00e5ff,#b388ff,#00ffff);
+  background-size:400%;
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  animation:glowMove 6s linear infinite;
+  text-shadow:0 0 10px rgba(0,255,255,0.6),0 0 20px rgba(124,77,255,0.6),0 0 30px rgba(0,255,255,0.6);
 }
+@keyframes glowMove{0%{background-position:0%;}100%{background-position:400%;}}
 
-body{
-background:var(--bg);
-color:var(--cyan);
-font-family:'Share Tech Mono',monospace;
-margin:0;
-overflow:hidden;
-height:100vh;
-}
+/* MATRIX */
+#matrix{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;}
 
-canvas{
-position:fixed;
-inset:0;
-z-index:-1;
-opacity:0.1;
-}
+/* DISCLAIMER */
+#disclaimerScreen{position:fixed;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:black;z-index:999;}
 
-.scanlines{
-position:fixed;
-inset:0;
-pointer-events:none;
-z-index:100;
-background:linear-gradient(rgba(18,16,16,0)50%,rgba(0,0,0,0.2)50%);
-background-size:100% 4px;
-}
+/* LOGIN */
+#loginScreen{display:none;position:fixed;width:100%;height:100%;justify-content:center;align-items:center;background:black;z-index:998;}
+.login-box{padding:30px;width:300px;background:rgba(0,0,0,0.85);border:1px solid #00ffff;box-shadow:0 0 30px #00ffff;text-align:center;}
+.login-box input{width:100%;padding:10px;margin-top:10px;background:black;border:1px solid #7c4dff;color:#b388ff;}
+.login-box button{margin-top:10px;padding:10px;width:100%;background:#00e5ff;border:none;font-weight:bold;}
+#loginError{margin-top:10px;color:red;}
 
-.header-box{
-text-align:center;
-border:2px solid var(--cyan);
-margin:20px auto;
-width:90%;
-max-width:500px;
-padding:10px;
-box-shadow:0 0 15px var(--cyan);
-}
+/* BOOT */
+#bootScreen{display:none;position:fixed;width:100%;height:100%;background:black;justify-content:center;align-items:center;}
+.terminal-box{width:420px;padding:25px;background:#000;border:1px solid #00ffff;box-shadow:0 0 20px #00ffff;}
+#bootLog{white-space:pre-wrap;font-size:14px;color:#00ff9c;}
 
-.main-title{
-font-size:2.5rem;
-margin:0;
-color:var(--cyan);
-text-shadow:0 0 10px var(--cyan);
-}
+/* DASHBOARD */
+#app{display:none;justify-content:center;align-items:center;height:100vh;}
+.dashboard{width:460px;padding:25px;background:rgba(0,0,0,0.55);backdrop-filter:blur(15px);border:1px solid rgba(0,255,255,0.5);box-shadow:0 0 30px rgba(0,255,255,0.6);}
 
-.warning-text{
-font-size:0.7rem;
-letter-spacing:1px;
-margin-top:10px;
-opacity:0.8;
-}
+/* PANEL */
+.panel{margin-top:15px;padding:15px;background:rgba(0,0,0,0.4);border:1px solid rgba(0,255,255,0.4);}
+.panel h3{color:#b388ff;}
 
-.terminal-frame{
-border:2px solid var(--cyan);
-width:90%;
-max-width:500px;
-margin:0 auto;
-padding:20px;
-background:rgba(0,0,0,0.8);
-box-shadow:inset 0 0 20px rgba(0,242,255,0.2);
-}
+/* SEARCH */
+.search{display:flex;gap:10px;}
+.search input{flex:1;padding:10px;background:black;border:1px solid #7c4dff;color:#b388ff;}
+.search button{padding:10px 20px;background:#00e5ff;border:none;font-weight:bold;}
 
-.frame-header{
-margin-bottom:20px;
-font-weight:bold;
-font-size:1.2rem;
-}
+/* RADAR */
+#radarScan{display:none;text-align:center;margin-top:10px;color:#ffd54f;}
+.radar{width:120px;height:120px;border:2px solid #00ffff;border-radius:50%;margin:auto;position:relative;overflow:hidden;}
+.radar::before{content:"";position:absolute;width:100%;height:100%;background:linear-gradient(90deg,transparent,#00ffff);animation:radar 2s linear infinite;}
+@keyframes radar{0%{transform:rotate(0deg);}100%{transform:rotate(360deg);}}
 
-.input-section{
-display:flex;
-border:1px solid var(--cyan);
-padding:10px;
-margin-bottom:10px;
-}
+/* HOLOGRAM CAR */
+#hologram{height:120px;margin-top:10px;perspective:600px;display:flex;justify-content:center;align-items:center;}
+.car-holo{width:100px;height:60px;transform-style:preserve-3d;animation:rotateHolo 3s linear infinite;}
+.car-body{width:100px;height:60px;background:linear-gradient(90deg,#7c4dff,#00ffff);border-radius:10px;box-shadow:0 0 15px #7c4dff,0 0 30px #00ffff inset;}
+@keyframes rotateHolo{0%{transform:rotateY(0deg);}100%{transform:rotateY(360deg);}}
 
-input{
-flex:1;
-background:transparent;
-border:none;
-color:var(--magenta);
-font-family:inherit;
-font-size:1rem;
-outline:none;
-padding-left:10px;
-}
+/* RESULT */
+#result{white-space:pre-line;margin-top:10px;color:#4dd0e1;}
 
-button{
-background:var(--cyan);
-color:#000;
-border:none;
-font-weight:bold;
-cursor:pointer;
-padding:0 15px;
-}
-
-.data-result{
-margin-top:20px;
-color:var(--green);
-}
-
-.status-bar{
-background:var(--green);
-color:#000;
-text-align:center;
-font-weight:bold;
-padding:3px;
-margin:10px 0;
-}
-
-.info-content{
-padding:10px;
-border:1px dashed var(--green);
-}
-
-.footer-status{
-position:fixed;
-bottom:20px;
-width:100%;
-text-align:center;
-font-size:0.7rem;
-}
-
-.bottom-credit{
-color:var(--magenta);
-margin-top:5px;
-}
-
-.hidden{
-display:none !important;
-}
-
-#intro-overlay{
-position:fixed;
-inset:0;
-background:black;
-z-index:999;
-display:flex;
-justify-content:center;
-align-items:center;
-}
-
-.boot-bar{
-width:250px;
-height:10px;
-border:1px solid var(--cyan);
-margin-top:10px;
-}
-
-.boot-fill{
-width:0%;
-height:100%;
-background:var(--cyan);
-box-shadow:0 0 10px var(--cyan);
-}
-
-/* PASSWORD SCREEN */
-
-#loginScreen{
-position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
-background:black;
-display:flex;
-justify-content:center;
-align-items:center;
-z-index:10000;
-}
-
-.login-box{
-text-align:center;
-border:2px solid #00f2ff;
-padding:30px;
-box-shadow:0 0 20px #00f2ff;
-}
-
-.login-box input{
-background:black;
-border:1px solid #00f2ff;
-color:#00f2ff;
-padding:10px;
-margin:10px;
-}
-
-.login-box button{
-padding:10px 20px;
-background:#00f2ff;
-border:none;
-cursor:pointer;
-}
-
-#loginError{
-color:red;
-}
+/* RISK */
+.low{color:#00ff9c}.medium{color:#ffd54f}.high{color:#ff5252;}
