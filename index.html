@@ -3,39 +3,79 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>RC Lookup | samarth hacker</title>
+<title>SAMARTH_HACKER // ACCESS_TERMINAL</title>
 <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
-<div class="matrix-bg"></div>
+<!-- PASSWORD SCREEN -->
+<div id="loginScreen">
+<div class="login-box">
+<h2>SECURE TERMINAL</h2>
+<input type="password" id="passwordInput" placeholder="ENTER PASSWORD">
+<button onclick="checkPassword()">ACCESS</button>
+<p id="loginError"></p>
+</div>
+</div>
 
-<div class="terminal">
+<canvas id="matrix"></canvas>
+<div class="scanlines"></div>
 
-  <header>
-    <h1>RC_LOOKUP<span>_SYSTEM</span></h1>
-    <p class="brand">samarth hacker</p>
-  </header>
+<div id="intro-overlay" style="display:none;">
+<div class="boot-container">
+<div class="glitch-header">SAMARTH PRO🧩 HACKER</div>
+<p id="boot-text">INITIALIZING_SECURE_NODE...</p>
+<div class="boot-bar"><div class="boot-fill"></div></div>
+</div>
+</div>
 
-  <section class="panel">
-    <p class="cmd">> ENTER_RC_NUMBER</p>
+<div class="main-ui hidden" id="main-ui">
+        
+<div class="header-box">
+<h1 class="main-title">SAMARTH - {𝗠𝗗}</h1>
 
-    <div class="input-box">
-      <input type="text" id="rcInput" placeholder="KL43G1669">
-      <button type="button" onclick="fetchRC()">SCAN</button>
-    </div>
+<div class="warning-text">
+[ UNAUTHORIZED ACCESS DETECTED - TRACING CONNECTION ]<br>
+[ NOTE: ONLY EDUCATIONAl  PURPOSE - PORT: 31337 - EST. 2026 ]
+</div>
 
-    <div id="loading" class="loading">[ SYSTEM SCANNING... ]</div>
-    <div id="result" class="result"></div>
-  </section>
+</div>
 
-  <footer>
-    <p>ACCESS LEVEL : ROOT | STATUS : ONLINE</p>
-  </footer>
+<div class="terminal-frame">
+
+<div class="frame-header">▶ ACCESS TERMINAL</div>
+
+<div class="input-section">
+<span class="cmd-prefix">hacker@samarth:~#</span>
+<input type="text" id="rcInput" placeholder="ENTER_RC_NUMBER">
+<button id="searchBtn">SCAN</button>
+</div>
+
+<div id="console-logs">
+> SYSTEM_IDLE... WAITING FOR INJECTION
+</div>
+
+<div id="resultCard" class="data-result hidden">
+
+<div class="status-bar">OPERATION_COMPLETE</div>
+
+<div id="infoDisplay" class="info-content"></div>
+
+<div class="status-bar">WINDOW_HACKED_SUCCESSFUL</div>
+
+</div>
+
+</div>
+
+<div class="footer-status">
+NODE: 0xDEADBEEF | PORT: 31337 | CONNECTED
+<div class="bottom-credit">"Hack the Planet!" -- samarth hacker</div>
+</div>
 
 </div>
 
 <script src="script.js"></script>
-</body>
 
+</body>
 </html>
