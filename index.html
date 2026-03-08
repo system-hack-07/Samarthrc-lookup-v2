@@ -3,43 +3,85 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SAMARTH_HACKER // ACCESS_TERMINAL</title>
+<title>Vehicle Intelligence Lookup</title>
 <link rel="stylesheet" href="style.css">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Fira+Code:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<!-- DISCLAIMER SCREEN -->
+<canvas id="matrix"></canvas>
+
+<!-- SOUNDS -->
+<audio id="disclaimerSound" src="https://assets.mixkit.co/active_storage/sfx/391/391-preview.mp3"></audio>
+<audio id="startupSound" src="https://assets.mixkit.co/active_storage/sfx/391/391-preview.mp3"></audio>
+<audio id="bootSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+<audio id="scanSound" src="https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3"></audio>
+<audio id="infoSound" src="https://assets.mixkit.co/active_storage/sfx/1123/1123-preview.mp3"></audio>
+
+<!-- DISCLAIMER -->
 <div id="disclaimerScreen">
-  <p>⚠ Disclaimer: This tool is for educational purposes only.</p>
-  <button id="acceptBtn">Accept</button>
+  <div class="login-box">
+    <h2 class="glowText">⚠ Disclaimer</h2>
+    <p>This tool is only for <strong>educational purposes</strong>.<br>
+    Made by: <strong>Samarth</strong></p>
+    <button onclick="acceptDisclaimer()">I Understand</button>
+  </div>
 </div>
 
 <!-- LOGIN SCREEN -->
 <div id="loginScreen">
-  <input type="password" id="passwordInput" placeholder="Enter Password">
-  <button id="loginBtn">Login</button>
-  <p id="loginError"></p>
+  <div class="login-box">
+    <h2 class="glowText">🚗 Secure Vehicle Access</h2>
+    <input type="password" id="passwordInput" placeholder="ENTER ACCESS PASSWORD"/>
+    <button onclick="checkPassword()">🔓 ACCESS</button>
+    <p id="loginError"></p>
+  </div>
 </div>
 
-<!-- BOOT SCREEN -->
+<!-- BOOT TERMINAL -->
 <div id="bootScreen">
-  <pre id="bootLog"></pre>
+  <div class="terminal-box">
+    <pre id="bootLog"></pre>
+  </div>
 </div>
 
-<!-- MAIN APP -->
+<!-- MAIN DASHBOARD -->
 <div id="app">
-  <input type="text" id="rcInput" placeholder="Enter RC Number">
-  <button onclick="fetchRC()">Search</button>
-  <div id="radarScan">🔄 Scanning...</div>
-  <div id="riskIndicator"></div>
-  <pre id="result"></pre>
-</div>
+  <div class="dashboard">
+    <header>
+      <h1 class="glowText">VEHICLE LOOKUP SYSTEM</h1>
+      <p class="brand glowText">[ SAMARTH HACKER ]</p>
+    </header>
 
-<!-- SOUNDS -->
-<audio id="disclaimerSound" src="disclaimer.mp3"></audio>
-<audio id="startupSound" src="startup.mp3"></audio>
-<audio id="readySound" src="ready.mp3"></audio>
-<audio id="scanSound" src="scan.mp3"></audio>
+    <section class="panel">
+      <h3 class="glowText">🚗 Vehicle RC Lookup</h3>
+      <div class="search">
+        <input id="rcInput" placeholder="ENTER RC NUMBER">
+        <button onclick="fetchRC()">SCAN</button>
+      </div>
+      <div id="radarScan">
+        <div class="radar"></div>
+        <p>Scanning Vehicle Database...</p>
+      </div>
+    </section>
+
+    <section class="panel">
+      <h3 class="glowText">Vehicle Intelligence</h3>
+      <div id="riskIndicator"></div>
+      <div id="hologram">
+        <div class="car-holo">
+          <div class="car-body"></div>
+        </div>
+      </div>
+      <div id="result"></div>
+    </section>
+
+    <footer>
+      <p>Designed Website : Samarth</p>
+      <p>Website Owner : Samarth</p>
+    </footer>
+  </div>
+</div>
 
 <script src="script.js"></script>
 </body>
