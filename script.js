@@ -1,5 +1,5 @@
 let attempts = 0;
-const maxSearchesPerDay = 2;
+const maxSearchesPerDay = 5;
 
 // DISCLAIMER SOUND & ACCEPT
 function acceptDisclaimer() {
@@ -105,19 +105,14 @@ async function fetchRC() {
       if (d["Fuel Type"] === "Diesel") { riskLevel = "HIGH"; riskClass = "high"; }
       risk.innerHTML = `<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;
 
-      // Display all info with **correct phone number**
-      result.innerText =
-`RC : ${data.rc}
-Owner : ${d["Owner Name"] || "N/A"}
-Phone : ${d["Phone"] || d["Phone Number"] || "N/A"}
-Model : ${d["Maker Model"] || "N/A"}
-Fuel : ${d["Fuel Type"] || "N/A"}
-Vehicle Class : ${d["Vehicle Class"] || "N/A"}
-RTO : ${d["Registered RTO"] || "N/A"}
-City : ${d["City Name"] || "N/A"}
-Registration : ${d["Registration Date"] || "N/A"}`;
+      // DYNAMIC DISPLAY OF ALL FIELDS
+      let output = `RC : ${data.rc}\n`;
+      for (const key in d) {
+        output += `${key} : ${d[key] || "N/A"}\n`;
+      }
+      result.innerText = output;
 
-      // INFO COMPLETION SOUND
+      // COMPLETION SOUND
       const infoSound = document.getElementById("infoSound");
       if (infoSound) infoSound.play().catch(e => console.log("Info sound blocked:", e));
     } catch {
