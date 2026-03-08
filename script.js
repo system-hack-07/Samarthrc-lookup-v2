@@ -1,5 +1,5 @@
 let attempts = 0;
-const maxSearchesPerDay = 2;
+const maxSearchesPerDay = 5;
 
 // DISCLAIMER SOUND & ACCEPT
 function acceptDisclaimer() {
@@ -121,3 +121,4 @@ async function fetchRC() {
     }
   }, 2500);
 }
+
