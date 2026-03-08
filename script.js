@@ -1,30 +1,33 @@
 let attempts = 0;
-const maxSearchesPerDay = 5; // ✅ Daily searches increased
+const maxSearchesPerDay = 5; // ✅ 5 searches per day
 
-// DISCLAIMER SOUND & ACCEPT (Hacker AI TTS with echo/fade)
+// DISCLAIMER TTS - Jarvis-style
 function acceptDisclaimer() {
   const msg = new SpeechSynthesisUtterance(
     "Welcome to this website, made by Master Samarth Hacker"
   );
 
-  // Hacker style: lower pitch, slower rate
-  msg.pitch = 0.7;
-  msg.rate = 0.95;
+  msg.pitch = 0.6;  // deep
+  msg.rate = 0.95;  // slightly slow
+  msg.volume = 1;
 
-  // Choose futuristic English voice if available
+  // Choose a futuristic English male voice if available
   const voices = window.speechSynthesis.getVoices();
   msg.voice = voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('male')) || voices[0];
 
-  // Play TTS with a slight echo effect using multiple utterances
   window.speechSynthesis.speak(msg);
+
+  // Slight echo for Jarvis feel
   setTimeout(() => {
-    const echo = new SpeechSynthesisUtterance("Welcome to this website, made by Master Samarth Hacker");
-    echo.pitch = 0.6; // lower
-    echo.rate = 1.0;  // normal speed
-    echo.volume = 0.5; // softer echo
+    const echo = new SpeechSynthesisUtterance(
+      "Welcome to this website, made by Master Samarth Hacker"
+    );
+    echo.pitch = 0.55;
+    echo.rate = 1.0;
+    echo.volume = 0.5;
     echo.voice = msg.voice;
     window.speechSynthesis.speak(echo);
-  }, 600); // 600ms delay for echo
+  }, 600);
 
   document.getElementById("disclaimerScreen").style.display = "none";
   document.getElementById("loginScreen").style.display = "flex";
@@ -50,9 +53,7 @@ function startBoot() {
   const boot = document.getElementById("bootScreen");
   boot.style.display = "flex";
 
-  const bootSound = document.getElementById("bootSound");
-  if (bootSound) bootSound.play().catch(e => console.log("Boot sound blocked:", e));
-
+  const bootSound = document.getElementById("bootSound"); // ✅ clean system-ready sound
   const logs = [
     "🔐 Authenticating user...",
     "🛰 Connecting to vehicle intelligence network...",
@@ -84,6 +85,9 @@ function startBoot() {
         boot.style.display = "none";
         document.getElementById("app").style.display = "flex";
 
+        // Play clean system-ready sound
+        if (bootSound) bootSound.play().catch(e => console.log("Boot sound blocked:", e));
+
         const startup = document.getElementById("startupSound");
         if (startup) startup.play().catch(e => console.log("Startup sound blocked:", e));
       }, 1000);
@@ -97,9 +101,7 @@ function startBoot() {
 async function fetchRC() {
   let today = new Date().toDateString();
   let searches = JSON.parse(localStorage.getItem("searches")) || {};
-  if (searches.date !== today) {
-    searches = { date: today, count: 0 };
-  }
+  if (searches.date !== today) searches = { date: today, count: 0 };
   if (searches.count >= maxSearchesPerDay) {
     alert(`❌ You have reached the maximum of ${maxSearchesPerDay} searches today.`);
     return;
@@ -125,27 +127,26 @@ async function fetchRC() {
       radar.style.display = "none";
 
       let riskLevel = "LOW",
-        riskClass = "low";
+          riskClass = "low";
       if (d["Vehicle Class"]?.includes("Transport")) {
-        riskLevel = "MEDIUM";
-        riskClass = "medium";
+        riskLevel = "MEDIUM"; riskClass = "medium";
       }
       if (d["Fuel Type"] === "Diesel") {
-        riskLevel = "HIGH";
-        riskClass = "high";
+        riskLevel = "HIGH"; riskClass = "high";
       }
       risk.innerHTML = `<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;
 
-      // DYNAMIC DISPLAY OF ALL FIELDS
+      // Display all API fields
       let output = `RC : ${data.rc}\n`;
       for (const key in d) {
         output += `${key} : ${d[key] || "N/A"}\n`;
       }
       result.innerText = output;
 
-      // ✅ Completion Sound
+      // COMPLETION SOUND
       const infoSound = document.getElementById("infoSound");
       if (infoSound) infoSound.play().catch(e => console.log("Info sound blocked:", e));
+
     } catch {
       radar.style.display = "none";
       result.innerText = "Vehicle Data Error";
