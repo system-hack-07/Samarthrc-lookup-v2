@@ -1,3 +1,82 @@
+let attempts = 0;  
+const maxSearchesPerDay = 4; // limit searches per day
+
+// DISCLAIMER BUTTON WITH SOUND
+document.getElementById("acceptBtn").addEventListener("click", () => {
+  const sound = document.getElementById("disclaimerSound");
+  if (sound) sound.play().catch(e => console.log("Disclaimer sound blocked:", e));
+
+  document.getElementById("disclaimerScreen").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
+});
+
+// LOGIN BUTTON
+document.getElementById("loginBtn").addEventListener("click", checkPassword);
+
+// STARTUP SOUND
+window.addEventListener("load", () => {
+  const startup = document.getElementById("startupSound");
+  if (startup) startup.play().catch(e => console.log("Startup sound blocked:", e));
+});
+
+// PASSWORD LOGIN
+function checkPassword() {
+  const password = document.getElementById("passwordInput").value;
+  if (password === "Avenue-1") {
+    document.getElementById("loginScreen").style.display = "none";
+    startBoot();
+  } else {
+    attempts++;
+    document.getElementById("loginError").innerText = "🚫 ACCESS DENIED - Attempt " + attempts + " / 3";
+    if (attempts >= 3) document.getElementById("loginError").innerText = "🔒 SYSTEM LOCKED";
+  }
+}
+
+// BOOT TERMINAL
+function startBoot() {
+  const boot = document.getElementById("bootScreen");
+  boot.style.display = "flex";
+  const logs = [
+    "🔐 Authenticating user...",
+    "🛰 Connecting to vehicle intelligence network...",
+    "📡 Syncing national vehicle database...",
+    "⚙ Loading radar modules...",
+    "🚗 Initializing vehicle lookup engine...",
+    "✅ Access granted"
+  ];
+  let line = 0;
+  const logBox = document.getElementById("bootLog");
+
+  function typeLine() {
+    if (line < logs.length) {
+      let text = logs[line];
+      let char = 0;
+      const typing = setInterval(() => {
+        logBox.innerHTML += text.charAt(char);
+        char++;
+        if (char >= text.length) {
+          clearInterval(typing);
+          logBox.innerHTML += "\n";
+          line++;
+          setTimeout(typeLine, 500);
+        }
+      }, 30);
+    } else {
+      setTimeout(() => {
+        boot.style.display = "none";
+        document.getElementById("app").style.display = "flex";
+
+        // SYSTEM READY SOUND
+        const readySound = document.getElementById("readySound");
+        if (readySound) readySound.play().catch(e => console.log("Ready sound blocked:", e));
+
+      }, 1000);
+    }
+  }
+  typeLine();
+}
+
+// VEHICLE LOOKUP
 async function fetchRC() {  
   let today = new Date().toDateString();  
   let searches = JSON.parse(localStorage.getItem("searches")) || {};  
@@ -31,7 +110,6 @@ async function fetchRC() {
       if (d["Fuel Type"] === "Diesel") { riskLevel = "HIGH"; riskClass = "high"; }  
       risk.innerHTML = `<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;  
 
-      // ✅ Phone Number safe + Full API Details  
       result.innerText =  
 `RC : ${data.rc}  
 Owner : ${d["Owner Name"] || "N/A"}  
@@ -53,4 +131,4 @@ Insurance Upto : ${d["Insurance Upto"] || "N/A"}`;
       result.innerText = "Vehicle Data Error";  
     }  
   }, 2500);  
-             }
+}
