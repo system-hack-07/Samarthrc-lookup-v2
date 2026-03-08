@@ -131,4 +131,4 @@ Insurance Upto : ${d["Insurance Upto"] || "N/A"}`;
       result.innerText = "Vehicle Data Error";
     }
   }, 2500);
-        }
+}
