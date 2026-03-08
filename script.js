@@ -1,25 +1,16 @@
 let attempts = 0;
-const maxSearchesPerDay = 4;
+const maxSearchesPerDay = 2;
 
-// DISCLAIMER BUTTON
-document.getElementById("acceptBtn").addEventListener("click", () => {
+// DISCLAIMER SOUND & ACCEPT
+function acceptDisclaimer() {
   const sound = document.getElementById("disclaimerSound");
   if (sound) sound.play().catch(e => console.log("Disclaimer sound blocked:", e));
 
   document.getElementById("disclaimerScreen").style.display = "none";
   document.getElementById("loginScreen").style.display = "flex";
-});
+}
 
-// LOGIN BUTTON
-document.getElementById("loginBtn").addEventListener("click", checkPassword);
-
-// STARTUP SOUND
-window.addEventListener("load", () => {
-  const startup = document.getElementById("startupSound");
-  if (startup) startup.play().catch(e => console.log("Startup sound blocked:", e));
-});
-
-// PASSWORD LOGIN
+// LOGIN
 function checkPassword() {
   const password = document.getElementById("passwordInput").value;
   if (password === "Avenue-1") {
@@ -36,6 +27,10 @@ function checkPassword() {
 function startBoot() {
   const boot = document.getElementById("bootScreen");
   boot.style.display = "flex";
+
+  const bootSound = document.getElementById("bootSound");
+  if (bootSound) bootSound.play().catch(e => console.log("Boot sound blocked:", e));
+
   const logs = [
     "🔐 Authenticating user...",
     "🛰 Connecting to vehicle intelligence network...",
@@ -44,6 +39,7 @@ function startBoot() {
     "🚗 Initializing vehicle lookup engine...",
     "✅ Access granted"
   ];
+
   let line = 0;
   const logBox = document.getElementById("bootLog");
 
@@ -66,12 +62,12 @@ function startBoot() {
         boot.style.display = "none";
         document.getElementById("app").style.display = "flex";
 
-        // SYSTEM READY SOUND
-        const readySound = document.getElementById("readySound");
-        if (readySound) readySound.play().catch(e => console.log("Ready sound blocked:", e));
+        const startup = document.getElementById("startupSound");
+        if (startup) startup.play().catch(e => console.log("Startup sound blocked:", e));
       }, 1000);
     }
   }
+
   typeLine();
 }
 
@@ -81,7 +77,7 @@ async function fetchRC() {
   let searches = JSON.parse(localStorage.getItem("searches")) || {};
   if (searches.date !== today) { searches = { date: today, count: 0 }; }
   if (searches.count >= maxSearchesPerDay) {
-    alert("❌ You have reached the maximum of 4 searches today.");
+    alert("❌ You have reached the maximum of 2 searches today.");
     return;
   }
   searches.count++;
@@ -109,23 +105,21 @@ async function fetchRC() {
       if (d["Fuel Type"] === "Diesel") { riskLevel = "HIGH"; riskClass = "high"; }
       risk.innerHTML = `<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;
 
-      // ✅ FIXED PHONE NUMBER LINE
+      // Display all info with **correct phone number**
       result.innerText =
 `RC : ${data.rc}
 Owner : ${d["Owner Name"] || "N/A"}
 Phone : ${d["Phone"] || d["Phone Number"] || "N/A"}
-Address : ${d["Address"] || "N/A"}
 Model : ${d["Maker Model"] || "N/A"}
 Fuel : ${d["Fuel Type"] || "N/A"}
 Vehicle Class : ${d["Vehicle Class"] || "N/A"}
 RTO : ${d["Registered RTO"] || "N/A"}
 City : ${d["City Name"] || "N/A"}
-Registration : ${d["Registration Date"] || "N/A"}
-Tax Upto : ${d["Tax Upto"] || "N/A"}
-Fitness Upto : ${d["Fitness Upto"] || "N/A"}
-PUC Upto : ${d["PUC Upto"] || "N/A"}
-Insurance Company : ${d["Insurance Company"] || "N/A"}
-Insurance Upto : ${d["Insurance Upto"] || "N/A"}`;
+Registration : ${d["Registration Date"] || "N/A"}`;
+
+      // INFO COMPLETION SOUND
+      const infoSound = document.getElementById("infoSound");
+      if (infoSound) infoSound.play().catch(e => console.log("Info sound blocked:", e));
     } catch {
       radar.style.display = "none";
       result.innerText = "Vehicle Data Error";
