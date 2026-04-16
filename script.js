@@ -1,45 +1,47 @@
 let attempts = 0;
-const maxSearchesPerDay = 5;
 
-// Play click sound on all buttons
-document.querySelectorAll("button").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const click = document.getElementById("clickSound");
-    if(click) click.play().catch(e=>{});
+window.addEventListener("DOMContentLoaded", () => {
+
+  document.querySelectorAll("button").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const click = document.getElementById("clickSound");
+      if(click) click.play().catch(()=>{});
+    });
   });
+
 });
 
-// DISCLAIMER TTS - Jarvis male voice
+// ✅ FIXED DISCLAIMER BUTTON
 function acceptDisclaimer() {
-  const msg = new SpeechSynthesisUtterance(
-    "Welcome to this website, made by Master Samarth Hacker"
-  );
-  msg.pitch = 0.6;
-  msg.rate = 0.95;
-  msg.volume = 1;
-  const voices = window.speechSynthesis.getVoices();
-  msg.voice = voices.find(v => v.lang.includes('en') && v.name.toLowerCase().includes('male')) || voices[0];
-  window.speechSynthesis.speak(msg);
 
-  // Echo for Jarvis feel
-  setTimeout(()=>{
-    const echo = new SpeechSynthesisUtterance(
+  try {
+    const msg = new SpeechSynthesisUtterance(
       "Welcome to this website, made by Master Samarth Hacker"
     );
-    echo.pitch = 0.55;
-    echo.rate = 1.0;
-    echo.volume = 0.5;
-    echo.voice = msg.voice;
-    window.speechSynthesis.speak(echo);
-  },600);
 
-  document.getElementById("disclaimerScreen").style.display="none";
-  document.getElementById("loginScreen").style.display="flex";
+    let voices = speechSynthesis.getVoices();
+
+    if (!voices.length) {
+      speechSynthesis.onvoiceschanged = () => {
+        msg.voice = speechSynthesis.getVoices()[0];
+        speechSynthesis.speak(msg);
+      };
+    } else {
+      msg.voice = voices[0];
+      speechSynthesis.speak(msg);
+    }
+
+  } catch(e) {}
+
+  // 🔥 IMPORTANT FIX
+  document.getElementById("disclaimerScreen").style.display = "none";
+  document.getElementById("loginScreen").style.display = "flex";
 }
 
 // LOGIN
 function checkPassword(){
   const password = document.getElementById("passwordInput").value;
+
   if(password==="Avenue-1"){
     document.getElementById("loginScreen").style.display="none";
     startBoot();
@@ -47,6 +49,7 @@ function checkPassword(){
     attempts++;
     document.getElementById("loginError").innerText =
       "🚫 ACCESS DENIED - Attempt "+attempts+" / 3";
+
     if(attempts>=3)
       document.getElementById("loginError").innerText="🔒 SYSTEM LOCKED";
   }
@@ -56,100 +59,71 @@ function checkPassword(){
 function startBoot(){
   const boot = document.getElementById("bootScreen");
   boot.style.display="flex";
-  const bootSound = document.getElementById("bootSound");
-  const typeBeep = document.getElementById("typeBeep");
+
   const logs = [
     "🔐 Authenticating user...",
-    "🛰 Connecting to vehicle intelligence network...",
-    "📡 Syncing national vehicle database...",
-    "⚙ Loading radar modules...",
-    "🚗 Initializing vehicle lookup engine...",
+    "🛰 Connecting to network...",
+    "📡 Syncing database...",
+    "⚙ Loading modules...",
+    "🚗 Initializing...",
     "✅ Access granted"
   ];
 
-  let line=0;
+  let i = 0;
   const logBox = document.getElementById("bootLog");
 
-  function typeLine(){
-    if(line<logs.length){
-      let text=logs[line];
-      let char=0;
-      const typing = setInterval(()=>{
-        logBox.innerHTML += text.charAt(char);
-
-        // tiny typewriter beep
-        if(typeBeep) { typeBeep.volume=0.05; typeBeep.play().catch(e=>{}); }
-
-        char++;
-        if(char>=text.length){
-          clearInterval(typing);
-          logBox.innerHTML+="\n";
-          line++;
-          setTimeout(typeLine,500);
-        }
-      },30);
-    }else{
+  function next(){
+    if(i < logs.length){
+      logBox.innerHTML += logs[i] + "\n";
+      i++;
+      setTimeout(next, 400);
+    } else {
       setTimeout(()=>{
         boot.style.display="none";
         document.getElementById("app").style.display="flex";
-
-        // play boot completion sound
-        if(bootSound) bootSound.play().catch(e=>{});
-
-        // startup background sound
-        const startup = document.getElementById("startupSound");
-        if(startup) startup.play().catch(e=>{});
       },1000);
     }
   }
 
-  typeLine();
+  next();
 }
 
-// VEHICLE LOOKUP
+// FETCH
 async function fetchRC(){
-  let today = new Date().toDateString();
-  let searches = JSON.parse(localStorage.getItem("searches"))||{};
-  if(searches.date!==today) searches={date:today,count:0};
-  if(searches.count>=maxSearchesPerDay){
-    alert(`❌ You have reached the maximum of ${maxSearchesPerDay} searches today.`);
-    return;
-  }
-  searches.count++;
-  localStorage.setItem("searches",JSON.stringify(searches));
 
   const rc = document.getElementById("rcInput").value.trim().toUpperCase();
+  if(!rc){ alert("Enter RC"); return; }
+
   const radar = document.getElementById("radarScan");
   const result = document.getElementById("result");
-  const risk = document.getElementById("riskIndicator");
+
   radar.style.display="block";
+  result.innerText="";
 
-  const scanSound = document.getElementById("scanSound");
-  if(scanSound) scanSound.play().catch(e=>{});
-
-  setTimeout(async()=>{
+  setTimeout(async ()=>{
     try{
-      const response = await fetch(`/api/rc?rc=${encodeURIComponent(rc)}`);
-      const data = await response.json();
-      const d = data.details;
+      const res = await fetch(`/api/rc?rc=${rc}`);
+      const data = await res.json();
+
       radar.style.display="none";
 
-      let riskLevel="LOW",riskClass="low";
-      if(d["Vehicle Class"]?.includes("Transport")){ riskLevel="MEDIUM"; riskClass="medium"; }
-      if(d["Fuel Type"]==="Diesel"){ riskLevel="HIGH"; riskClass="high"; }
-      risk.innerHTML=`<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;
+      if(!data || !data.details){
+        result.innerText="No Data Found";
+        return;
+      }
 
-      // show all API fields
-      let output = `RC : ${data.rc}\n`;
-      for(const key in d){ output += `${key} : ${d[key] || "N/A"}\n`; }
+      let output = `RC : ${data.rc}\n\n`;
+
+      for(const key in data.details){
+        output += `${key} : ${data.details[key] || "N/A"}\n`;
+      }
+
       result.innerText = output;
-
-      const infoSound = document.getElementById("infoSound");
-      if(infoSound) infoSound.play().catch(e=>{});
 
     }catch{
       radar.style.display="none";
-      result.innerText="Vehicle Data Error";
+      result.innerText="Error fetching data";
     }
-  },2500);
-                                 }
+
+  },2000);
+        }
