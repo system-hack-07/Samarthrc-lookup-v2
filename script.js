@@ -1,129 +1,103 @@
-let attempts = 0;
+let attempts=0;
+const maxSearchesPerDay=2;
 
-window.addEventListener("DOMContentLoaded", () => {
-
-  document.querySelectorAll("button").forEach(btn => {
-    btn.addEventListener("click", () => {
-      const click = document.getElementById("clickSound");
-      if(click) click.play().catch(()=>{});
-    });
-  });
-
+window.addEventListener("load",()=>{
+  const startup=document.getElementById("startupSound");
+  if(startup) startup.play().catch(e=>console.log("Startup sound blocked:",e));
 });
 
-// ✅ FIXED DISCLAIMER BUTTON
-function acceptDisclaimer() {
-
-  try {
-    const msg = new SpeechSynthesisUtterance(
-      "Welcome to this website, made by Master Samarth Hacker"
-    );
-
-    let voices = speechSynthesis.getVoices();
-
-    if (!voices.length) {
-      speechSynthesis.onvoiceschanged = () => {
-        msg.voice = speechSynthesis.getVoices()[0];
-        speechSynthesis.speak(msg);
-      };
-    } else {
-      msg.voice = voices[0];
-      speechSynthesis.speak(msg);
-    }
-
-  } catch(e) {}
-
-  // 🔥 IMPORTANT FIX
-  document.getElementById("disclaimerScreen").style.display = "none";
-  document.getElementById("loginScreen").style.display = "flex";
+// DISCLAIMER
+function acceptDisclaimer(){
+  document.getElementById("disclaimerScreen").style.display="none";
+  document.getElementById("loginScreen").style.display="flex";
 }
 
-// LOGIN
+/* LOGIN */
 function checkPassword(){
-  const password = document.getElementById("passwordInput").value;
-
+  const password=document.getElementById("passwordInput").value;
   if(password==="Avenue-1"){
     document.getElementById("loginScreen").style.display="none";
     startBoot();
   }else{
     attempts++;
-    document.getElementById("loginError").innerText =
-      "🚫 ACCESS DENIED - Attempt "+attempts+" / 3";
-
-    if(attempts>=3)
-      document.getElementById("loginError").innerText="🔒 SYSTEM LOCKED";
+    document.getElementById("loginError").innerText="🚫 ACCESS DENIED - Attempt "+attempts+" / 3";
+    if(attempts>=3) document.getElementById("loginError").innerText="🔒 SYSTEM LOCKED";
   }
 }
 
-// BOOT
+/* BOOT */
 function startBoot(){
-  const boot = document.getElementById("bootScreen");
+  const boot=document.getElementById("bootScreen");
   boot.style.display="flex";
-
-  const logs = [
+  const logs=[
     "🔐 Authenticating user...",
-    "🛰 Connecting to network...",
-    "📡 Syncing database...",
-    "⚙ Loading modules...",
-    "🚗 Initializing...",
+    "🛰 Connecting to vehicle intelligence network...",
+    "📡 Syncing national vehicle database...",
+    "⚙ Loading radar modules...",
+    "🚗 Initializing vehicle lookup engine...",
     "✅ Access granted"
   ];
-
-  let i = 0;
-  const logBox = document.getElementById("bootLog");
-
-  function next(){
-    if(i < logs.length){
-      logBox.innerHTML += logs[i] + "\n";
-      i++;
-      setTimeout(next, 400);
-    } else {
-      setTimeout(()=>{
-        boot.style.display="none";
-        document.getElementById("app").style.display="flex";
-      },1000);
+  let line=0;
+  const logBox=document.getElementById("bootLog");
+  function typeLine(){
+    if(line<logs.length){
+      let text=logs[line];let char=0;
+      const typing=setInterval(()=>{
+        logBox.innerHTML+=text.charAt(char);
+        char++;
+        if(char>=text.length){clearInterval(typing);logBox.innerHTML+="\n";line++;setTimeout(typeLine,500);}
+      },30);
+    }else{
+      setTimeout(()=>{boot.style.display="none";document.getElementById("app").style.display="flex";},1000);
     }
   }
-
-  next();
+  typeLine();
 }
 
-// FETCH
+/* VEHICLE LOOKUP WITH DAILY LIMIT & SCAN SOUND */
 async function fetchRC(){
+  let today=new Date().toDateString();
+  let searches=JSON.parse(localStorage.getItem("searches"))||{};
+  if(searches.date!==today){searches={date:today,count:0};}
+  if(searches.count>=maxSearchesPerDay){
+    alert("❌ You have reached the maximum of 2 searches today.");
+    return;
+  }
+  searches.count++;
+  localStorage.setItem("searches",JSON.stringify(searches));
 
-  const rc = document.getElementById("rcInput").value.trim().toUpperCase();
-  if(!rc){ alert("Enter RC"); return; }
-
-  const radar = document.getElementById("radarScan");
-  const result = document.getElementById("result");
-
+  const rc=document.getElementById("rcInput").value.trim().toUpperCase();
+  const radar=document.getElementById("radarScan");
+  const result=document.getElementById("result");
+  const risk=document.getElementById("riskIndicator");
   radar.style.display="block";
-  result.innerText="";
 
-  setTimeout(async ()=>{
+  // PLAY SCAN SOUND directly triggered by click
+  const scanSound=document.getElementById("scanSound");
+  if(scanSound) scanSound.play().catch(e=>console.log("Scan sound blocked:",e));
+
+  setTimeout(async()=>{
     try{
-      const res = await fetch(`/api/rc?rc=${rc}`);
-      const data = await res.json();
-
+      const response=await fetch(`/api/rc?rc=${encodeURIComponent(rc)}`);
+      const data=await response.json();
+      const d=data.details;
       radar.style.display="none";
-
-      if(!data || !data.details){
-        result.innerText="No Data Found";
-        return;
-      }
-
-      let output = `RC : ${data.rc}\n\n`;
-
-      for(const key in data.details){
-        output += `${key} : ${data.details[key] || "N/A"}\n`;
-      }
-
-      result.innerText = output;
-
+      let riskLevel="LOW";let riskClass="low";
+      if(d["Vehicle Class"]?.includes("Transport")){riskLevel="MEDIUM";riskClass="medium";}
+      if(d["Fuel Type"]==="Diesel"){riskLevel="HIGH";riskClass="high";}
+      risk.innerHTML=`<h4 class="${riskClass}">⚠ RISK LEVEL : ${riskLevel}</h4>`;
+      result.innerText=
+`RC : ${data.rc}
+Owner : ${d["Owner Name"]}
+Model : ${d["Maker Model"]}
+Fuel : ${d["Fuel Type"]}
+Vehicle Class : ${d["Vehicle Class"]}
+RTO : ${d["Registered RTO"]}
+City : ${d["City Name"]}
+Registration : ${d["Registration Date"]}`;
     }catch{
       radar.style.display="none";
-      result.innerText="Error fetching data";
+      result.innerText="Vehicle Data Error";
     }
-
-  },2000);
-        }
+  },2500);
+    }
